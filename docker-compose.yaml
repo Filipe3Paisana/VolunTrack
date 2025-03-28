@@ -1,13 +1,12 @@
 services:
   backend:
     build:
-      context: /backend/server
+      context: ./backend/server
       dockerfile: Dockerfile
-    image: node:18
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgres://user:password@db:5432/dbname
+      - DATABASE_URL=postgres://test:test@db:5432/test
     depends_on:
       - db
 
@@ -22,3 +21,6 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./backend/db:/docker-entrypoint-initdb.d
+
+volumes:
+    db_data:
