@@ -149,14 +149,20 @@ app.get("/profile", verificarToken, async (req, res) => {
     }
 
     const user = userQuery.rows[0];
+    const dataNascimentoFormatada = new Date(user.data_nascimento).toLocaleDateString("pt-PT");
+
+    // Verifique os dados aqui
+    console.log(user);
 
     res.json({
       id: user.id_utilizador,
       nome: user.nome,
       email: user.email,
       telefone: user.telefone,
-      data_nascimento: user.data_nascimento,
-      tipo_utilizador: user.tipo_utilizador,
+      data_nascimento: dataNascimentoFormatada,
+      categoria: user.categoria,
+      disponibilidade: user.disponibilidade,
+      competencias: user.competencias,
       localidade: user.localidade,
     });
   } catch (error) {
@@ -164,6 +170,7 @@ app.get("/profile", verificarToken, async (req, res) => {
     res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: "Erro ao buscar perfil" });
   }
 });
+
 
 app.post("/register-coordenador", async (req, res) => {
   const { nome, email, telefone, data_nascimento, departamento, password, localidade } = req.body;

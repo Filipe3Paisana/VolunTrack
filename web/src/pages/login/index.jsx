@@ -34,7 +34,7 @@ function Login() {
             if (response.ok) {
                 localStorage.setItem('token', data.token);
                 setUser(data.user);
-                navigate('/profile');
+                navigate('/perfil');
             } else {
                 alert(`Erro: ${data.message}`);
             }

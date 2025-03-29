@@ -18,10 +18,11 @@ export const AuthProvider = ({ children }) => {
                 method: 'GET',
                 headers: { Authorization: `Bearer ${token}` },
             });
-
+    
             const data = await response.json();
             if (response.ok) {
-                setUser(data);
+                console.log("User data:", data); // Verifique os dados aqui
+                setUser(data);  // Atualiza o estado com os dados do usuário
             } else {
                 logout();
             }
@@ -30,6 +31,7 @@ export const AuthProvider = ({ children }) => {
             logout();
         }
     };
+    
 
     const logout = () => {
         localStorage.removeItem('token');
