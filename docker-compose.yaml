@@ -1,5 +1,6 @@
 services:
   web:
+    container_name: react_app
     build:
       context: ./web
     ports:

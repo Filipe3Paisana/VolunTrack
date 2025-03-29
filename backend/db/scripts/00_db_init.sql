@@ -6,11 +6,11 @@ CREATE TABLE Utilizadores
     Nome            TEXT NOT NULL,
     Email           TEXT UNIQUE NOT NULL,
     Telefone        TEXT,
-    Endereco        TEXT,
     Data_Nascimento DATE,
     Tipo_Utilizador TEXT CHECK (Tipo_Utilizador IN ('Administrador', 'Coordenador', 'Voluntario')),
     Data_Entrada    DATE DEFAULT CURRENT_DATE,
     Ativo           BOOLEAN DEFAULT TRUE,
+    Localidade      TEXT,
     Password        TEXT NOT NULL
 );
 
@@ -30,7 +30,8 @@ CREATE TABLE Coordenadores
 CREATE TABLE Voluntarios
 (
     ID_Voluntario   UUID PRIMARY KEY REFERENCES Utilizadores (ID_Utilizador),
-    Disponibilidade TEXT,
+    Disponibilidade TEXT CHECK (Disponibilidade IN ('Manhã', 'Tarde', 'Noite')) DEFAULT 'pendente',
+    Categoria       TEXT,
     Competencias    TEXT,
     Areas_Interesse TEXT,
     ID_Coordenador  UUID REFERENCES Coordenadores (ID_Coordenador)
@@ -53,7 +54,7 @@ CREATE TABLE Turnos
     Data_Hora_Inicio TIMESTAMP NOT NULL,
     Data_Hora_Fim    TIMESTAMP NOT NULL,
     Localizacao      TEXT,
-    Numero_Vagas     INTEGER
+    Numero_Vagas     INTEGER CHECK (Numero_Vagas > 0) -- Garante que não há turnos sem vagas
 );
 
 CREATE TABLE Participacoes
@@ -62,7 +63,7 @@ CREATE TABLE Participacoes
     ID_Turno         UUID REFERENCES Turnos (ID_Turno) ON DELETE CASCADE,
     ID_Voluntario    UUID REFERENCES Voluntarios (ID_Voluntario) ON DELETE CASCADE,
     Status           TEXT CHECK (Status IN ('confirmado', 'pendente', 'cancelado')) DEFAULT 'pendente',
-    Horas_Realizadas NUMERIC(5, 2)
+    Horas_Realizadas NUMERIC(5, 2) CHECK (Horas_Realizadas >= 0) -- Evita valores negativos
 );
 
 CREATE TABLE Comunicacoes
@@ -70,8 +71,8 @@ CREATE TABLE Comunicacoes
     ID_Comunicacao UUID PRIMARY KEY,
     ID_Utilizador  UUID REFERENCES Utilizadores (ID_Utilizador) ON DELETE CASCADE,
     Tipo           TEXT CHECK (Tipo IN ('email', 'sms')),
-    Assunto        TEXT,
-    Mensagem       TEXT,
-    Data_Envio     TIMESTAMP                                                       DEFAULT CURRENT_TIMESTAMP,
+    Assunto        TEXT NOT NULL,
+    Mensagem       TEXT NOT NULL,
+    Data_Envio     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     Status_Envio   TEXT CHECK (Status_Envio IN ('enviado', 'pendente', 'falhado')) DEFAULT 'pendente'
 );
