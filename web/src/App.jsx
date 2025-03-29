@@ -8,6 +8,7 @@ import Perfil from './pages/perfil';
 import { AuthProvider } from './context/AuthContext'
 import ProjectDashboard from './pages/project_dashboard';
 import Login from './pages/login';
+import CoordinatorHome from './pages/coordinator_home'
 
 const App = () => { 
   return (
@@ -16,10 +17,11 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/project" element={<CreateProjectPage />} />
+          <Route path="/create_project" element={<CreateProjectPage />} />
           <Route path="/project_dashboard" element={<ProjectDashboard />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/voluntario_list" element={<MatchingVolunteersPage />} />
+          <Route path="/coordinator_home" element={<CoordinatorHome />} />
         </Routes>
       </Router>
     </AuthProvider>
