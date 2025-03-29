@@ -165,9 +165,73 @@ app.get("/profile", verificarToken, async (req, res) => {
   }
 });
 
-/**
- * INICIANDO O SERVIDOR
- */
+app.post("/register-coordenador", async (req, res) => {
+  const { nome, email, telefone, data_nascimento, departamento, password, localidade } = req.body;
+
+  try {
+    const id_utilizador = uuidv4();
+    const hashedPassword = await bcrypt.hash(password, 10); 
+
+    await pool.query(
+      "INSERT INTO Utilizadores (ID_Utilizador, Nome, Email, Telefone, Data_Nascimento, Tipo_Utilizador, Password, Localidade) VALUES ($1, $2, $3, $4, $5, 'Coordenador', $6, $7)",
+      [id_utilizador, nome, email, telefone, data_nascimento, hashedPassword, localidade]
+    );
+
+    await pool.query(
+      "INSERT INTO Coordenadores (ID_Coordenador, Departamento, ID_Administrador) VALUES ($1, $2, NULL)", // O ID_Administrador pode ser NULL ou você pode associá-lo a um administrador existente
+      [id_utilizador, departamento]  // Usando o ID_Utilizador como ID_Coordenador
+    );
+
+    res.status(201).json({
+      message: "Coordenador registrado com sucesso!",
+      id_utilizador,
+      nome,
+      email,
+      departamento,
+    });
+  } catch (error) {
+    console.error("Erro ao registrar coordenador:", error);
+    res.status(500).json({ message: "Erro ao registrar coordenador." });
+  }
+});
+
+app.post("/projetos", verificarToken, async (req, res) => {
+  const { nome, descricao, data_inicio, data_fim, id_coordenador } = req.body;
+
+  // Verifica se o usuário tem permissão para criar um projeto
+  if (req.user.tipo_utilizador !== "Coordenador" && req.user.tipo_utilizador !== "Administrador") {
+    return res.status(403).json({ message: "Apenas Coordenadores e Administradores podem criar projetos." });
+  }
+
+  try {
+    const id_projeto = uuidv4();
+
+    await pool.query(
+      "INSERT INTO Projetos (ID_Projeto, Nome_Projeto, Descricao, Data_Inicio, Data_Fim, ID_Coordenador) VALUES ($1, $2, $3, $4, $5, $6)",
+      [id_projeto, nome, descricao, data_inicio, data_fim, id_coordenador]
+    );
+
+    // Buscar voluntários disponíveis
+    const voluntariosQuery = await pool.query(
+      "SELECT ID_Voluntario, Nome, Disponibilidade, Email FROM Voluntarios INNER JOIN Utilizadores ON Voluntarios.ID_Voluntario = Utilizadores.ID_Utilizador WHERE Utilizadores.Ativo = TRUE"
+    );
+
+    // Enviar a lista de voluntários para o coordenador que criou o projeto
+    await pool.query(
+      "INSERT INTO Comunicacoes (ID_Comunicacao, ID_Utilizador, Tipo, Assunto, Mensagem, Status_Envio) VALUES ($1, $2, 'email', $3, $4, 'pendente')",
+      [uuidv4(), req.user.id, "Lista de Voluntários Disponíveis", JSON.stringify(voluntariosQuery.rows)]
+    );
+
+    res.status(201).json({ 
+      message: "Projeto criado com sucesso!", 
+      id_projeto, 
+      voluntarios_disponiveis: voluntariosQuery.rows 
+    });
+  } catch (error) {
+    console.error("Erro ao criar projeto:", error);
+    res.status(500).json({ message: "Erro ao criar projeto." });
+  }
+});
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
