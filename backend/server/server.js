@@ -182,7 +182,7 @@ app.post("/register-coordenador", async (req, res) => {
       [id_utilizador, departamento]  // Usando o ID_Utilizador como ID_Coordenador
     );
 
-    res.status(201).json({
+    res.status(HttpStatus.CREATED).json({
       message: "Coordenador registrado com sucesso!",
       id_utilizador,
       nome,
@@ -191,7 +191,7 @@ app.post("/register-coordenador", async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao registrar coordenador:", error);
-    res.status(500).json({ message: "Erro ao registrar coordenador." });
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: "Erro ao registrar coordenador." });
   }
 });
 
@@ -200,7 +200,7 @@ app.post("/projetos", verificarToken, async (req, res) => {
 
   // Verifica se o usuário tem permissão para criar um projeto
   if (req.user.tipo_utilizador !== "Coordenador" && req.user.tipo_utilizador !== "Administrador") {
-    return res.status(403).json({ message: "Apenas Coordenadores e Administradores podem criar projetos." });
+    return res.status(HttpStatus.FORBIDDEN).json({ message: "Apenas Coordenadores e Administradores podem criar projetos." });
   }
 
   try {
@@ -222,14 +222,14 @@ app.post("/projetos", verificarToken, async (req, res) => {
       [uuidv4(), req.user.id, "Lista de Voluntários Disponíveis", JSON.stringify(voluntariosQuery.rows)]
     );
 
-    res.status(201).json({ 
+    res.status(HttpStatus.CREATED).json({ 
       message: "Projeto criado com sucesso!", 
       id_projeto, 
       voluntarios_disponiveis: voluntariosQuery.rows 
     });
   } catch (error) {
     console.error("Erro ao criar projeto:", error);
-    res.status(500).json({ message: "Erro ao criar projeto." });
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: "Erro ao criar projeto." });
   }
 });
 app.listen(PORT, () => {
