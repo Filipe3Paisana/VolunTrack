@@ -7,13 +7,15 @@ import MatchingVolunteersPage from './pages/volutario_select'
 import Perfil from './pages/perfil';
 import { AuthProvider } from './context/AuthContext'
 import ProjectDashboard from './pages/project_dashboard';
+import Login from './pages/login';
 
-const App = () => {
+const App = () => { 
   return (
     <AuthProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/project" element={<CreateProjectPage />} />
           <Route path="/project_dashboard" element={<ProjectDashboard />} />
           <Route path="/perfil" element={<Perfil />} />

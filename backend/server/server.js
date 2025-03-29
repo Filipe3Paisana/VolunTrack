@@ -74,12 +74,12 @@ app.post("/register", async (req, res) => {
       [id_utilizador, disponibilidade, competencias, categoria]
     );
 
-    res.status(201).json({
+    res.status(HttpStatus.OK).json({
       message: "Utilizador registrado com sucesso",
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       message: "Erro ao registrar o utilizador",
     });
   }
@@ -95,7 +95,7 @@ app.post("/login", async (req, res) => {
     const userQuery = await pool.query("SELECT * FROM Utilizadores WHERE Email = $1", [email]);
 
     if (userQuery.rows.length === 0) {
-      return res.status(401).json({ message: "Credenciais inválidas" });
+      return res.status(HttpStatus.UNAUTHORIZED).json({ message: "Credenciais inválidas" });
     }
 
     const user = userQuery.rows[0];
@@ -103,7 +103,7 @@ app.post("/login", async (req, res) => {
     // Verifica a senha
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({ message: "Credenciais inválidas" });
+      return res.status(HttpStatus.UNAUTHORIZED).json({ message: "Credenciais inválidas" });
     }
 
     // Gera o token JWT
@@ -114,7 +114,7 @@ app.post("/login", async (req, res) => {
     res.json({ token, user: { id: user.id_utilizador, nome: user.nome, email: user.email, tipo: user.tipo_utilizador } });
   } catch (error) {
     console.error("Erro ao fazer login:", error);
-    res.status(500).json({ message: "Erro no servidor" });
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: "Erro no servidor" });
   }
 });
 
@@ -125,7 +125,7 @@ const verificarToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Acesso negado! Token não fornecido." });
+    return res.status(HttpStatus.UNAUTHORIZED).json({ message: "Acesso negado! Token não fornecido." });
   }
 
   try {
@@ -133,7 +133,7 @@ const verificarToken = (req, res, next) => {
     req.user = decoded; // Adiciona os dados do utilizador ao request
     next();
   } catch (error) {
-    return res.status(403).json({ message: "Token inválido ou expirado." });
+    return res.status(HttpStatus.NOT_FOUND).json({ message: "Token inválido ou expirado." });
   }
 };
 
@@ -145,7 +145,7 @@ app.get("/profile", verificarToken, async (req, res) => {
     const userQuery = await pool.query("SELECT * FROM Utilizadores WHERE ID_Utilizador = $1", [req.user.id]);
 
     if (userQuery.rows.length === 0) {
-      return res.status(404).json({ message: "Utilizador não encontrado" });
+      return res.status(HttpStatus.NOT_FOUND).json({ message: "Utilizador não encontrado" });
     }
 
     const user = userQuery.rows[0];
@@ -161,7 +161,7 @@ app.get("/profile", verificarToken, async (req, res) => {
     });
   } catch (error) {
     console.error("Erro ao buscar perfil:", error);
-    res.status(500).json({ message: "Erro ao buscar perfil" });
+    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: "Erro ao buscar perfil" });
   }
 });
 
