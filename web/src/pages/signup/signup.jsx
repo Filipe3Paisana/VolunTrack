@@ -14,6 +14,17 @@ import {
 
 function App() {
     const [categoria, setCategoria] = useState('');
+    const [formData, setFormData] = useState({
+        nome: '',
+        email: '',
+        telefone: '',
+        data_nascimento: '',
+        password: '',
+        disponibilidade: '',
+        competencias: '',
+        categoria: '',
+        localidade: '',
+    });
     
     // Definir as competências por categoria
     const competenciasOptions = {
@@ -22,6 +33,33 @@ function App() {
         'Formação/Ensino': ['Professor', 'Instrutor', 'Educador'],
         'Apoio Social': ['Assistente Social', 'Terapeuta', 'Voluntário'],
         'Âmbito Local': ['Coordenador', 'Gestor de Projetos', 'Organizador Comunitário']
+    };
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        formData.categoria = categoria;
+
+        try {
+            const response = await fetch('http://localhost:8080/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Usuário cadastrado com sucesso!');
+            } else {
+                alert(`Erro: ${data.message}`);
+            }
+        } catch (error) {
+            console.error('Erro ao registrar:', error);
+            alert('Erro ao conectar com o servidor.');
+        }
     };
 
     return (
@@ -40,24 +78,25 @@ function App() {
 
                     <MDBCard className='my-5 bg-glass'>
                         <MDBCardBody className='p-5'>
+                            <form onSubmit={handleSubmit}>
+                            
+                    
+                            <MDBInput wrapperClass='mb-4' label='Name' id='nome' type='name' onChange={handleChange}/>
+                            <MDBInput wrapperClass='mb-4' label='Email' id='email' type='email' onChange={handleChange}/>
+                            <MDBInput wrapperClass='mb-4' label='Password' id='password' type='password' onChange={handleChange}/>
                             <MDBRow>
                                 <MDBCol col='6'>
-                                    <MDBInput wrapperClass='mb-4' label='First name' id='form1' type='text' />
+                                <MDBInput wrapperClass='mb-4' label='Phone number' id='telefone' type='tel' onChange={handleChange}/>
                                 </MDBCol>
 
                                 <MDBCol col='6'>
-                                    <MDBInput wrapperClass='mb-4' label='Last name' id='form2' type='text' />
+                                <MDBInput wrapperClass='mb-4' label='Date of birth' id='data_nascimento' type='date' onChange={handleChange}/>
                                 </MDBCol>
                             </MDBRow>
-
-                            <MDBInput wrapperClass='mb-4' label='Email' id='form3' type='email' />
-                            <MDBInput wrapperClass='mb-4' label='Password' id='form4' type='password' />
-                            <MDBInput wrapperClass='mb-4' label='Phone number' id='form6' type='tel' />
-                            <MDBInput wrapperClass='mb-4' label='Date of birth' id='form5' type='date' />
-
+                            
                             {/* Disponibilidade durante o dia Dropdown */}
                             <div className='mb-4'>
-                                <select className='form-select' id='disponibilidade'>
+                                <select className='form-select' id='disponibilidade' onChange={handleChange}>
                                     <option value='' disabled selected>Disponibilidade</option>
                                     <option value='Manhã'>Manhã</option>
                                     <option value='Tarde'>Tarde</option>
@@ -85,7 +124,7 @@ function App() {
 
                             {/* Competências Dropdown */}
                             <div className='mb-4'>
-                                <select className='form-select' id='competencias'>
+                                <select className='form-select' id='competencias' onChange={handleChange}>
                                     <option value='' disabled selected>Competência</option>
                                     {categoria && competenciasOptions[categoria] && competenciasOptions[categoria].map((comp) => (
                                         <option key={comp} value={comp}>{comp}</option>
@@ -95,7 +134,7 @@ function App() {
 
                             {/* Localidade Dropdown */}
                             <div className='mb-4'>
-                                <select className='form-select' id='localidade'>
+                                <select className='form-select' id='localidade' onChange={handleChange}>
                                     <option value='' disabled selected >Localidade</option>
                                     <option value='Aveiro'>Aveiro</option>
                                     <option value='Beja'>Beja</option>
@@ -120,7 +159,8 @@ function App() {
                                 </select>
                             </div>
 
-                            <MDBBtn className='w-100 mb-4' size='md' style={{ backgroundColor: 'hsl(0, 90%, 50%)', color: 'white' }}>sign up</MDBBtn>
+                            <MDBBtn type='submit' className='w-100 mb-4' size='md' style={{ backgroundColor: 'hsl(0, 90%, 50%)', color: 'white' }}>Sign up</MDBBtn>
+                            </form>
                         </MDBCardBody>
                     </MDBCard>
 
