@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Perfil.css';
+import './perfil.css';
 
 function Perfil() {
     const [isEditing, setIsEditing] = useState(false);

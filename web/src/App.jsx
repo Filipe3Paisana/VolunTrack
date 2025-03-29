@@ -2,10 +2,10 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './App.css'
 import React from 'react';
-import Signup from './pages/Signup/Signup';
-import Perfil from './pages/Perfil/Perfil';
-import CreateProjectPage from './pages/project_page/project'
-import MatchingVolunteersPage from './pages/volutario_select/volutario_list'
+import Signup from './pages/signup';
+import Perfil from './pages/perfil';
+import CreateProjectPage from './pages/project_page'
+import MatchingVolunteersPage from './pages/volutario_select'
 
 const App = () => {
   return (
