@@ -1,15 +1,19 @@
-FROM node:20
+# Dockerfile para a aplicação React
+FROM node:18
 
-WORKDIR /app
+# Definir o diretório de trabalho no contêiner
+WORKDIR /web
 
+# Copiar package.json e package-lock.json
 COPY package*.json ./
 
+# Instalar dependências
 RUN npm install
 
+# Copiar o restante do código da aplicação
 COPY . .
 
-RUN npm run build
+# Compilar a aplicação React
+CMD npm start
 
 EXPOSE 3000
-
-CMD ["npm", "run", "preview", "--", "--host", "--port", "3000"]
