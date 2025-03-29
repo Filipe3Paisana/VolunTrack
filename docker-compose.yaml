@@ -1,5 +1,4 @@
 services:
-
   web:
     build:
       context: ./web
@@ -7,12 +6,11 @@ services:
       - "3000:3000"
     volumes:
       - ./web:/app
-      - node_modules:/node_modules
     depends_on:
       - backend
     environment:
       - REACT_APP_API_URL=http://localhost:8080
-  
+
   backend:
     build:
       context: ./backend/server
@@ -25,6 +23,7 @@ services:
       - db
 
   db:
+    container_name: postgres
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -34,8 +33,7 @@ services:
       POSTGRES_DB: test
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./backend/db:/docker-entrypoint-initdb.d
+      - ./backend/db/scripts:/docker-entrypoint-initdb.d
 
 volumes:
-    db_data:
-    node_modules:
+  db_data:

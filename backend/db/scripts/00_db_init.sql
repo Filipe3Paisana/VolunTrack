@@ -10,7 +10,8 @@ CREATE TABLE Utilizadores
     Data_Nascimento DATE,
     Tipo_Utilizador TEXT CHECK (Tipo_Utilizador IN ('Administrador', 'Coordenador', 'Voluntario')),
     Data_Entrada    DATE DEFAULT CURRENT_DATE,
-    Ativo           BOOLEAN DEFAULT TRUE
+    Ativo           BOOLEAN DEFAULT TRUE,
+    Password        TEXT NOT NULL
 );
 
 CREATE TABLE Administradores
