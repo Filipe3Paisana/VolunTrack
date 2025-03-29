@@ -1,171 +1,128 @@
-import React, { useState } from 'react';
-import './perfil.css';
+import React, { useContext, useEffect } from 'react';
+import { AuthContext } from '../../context/AuthContext'; // Importando o AuthContext
+import './Perfil.css';
 
 function Perfil() {
-    const [isEditing, setIsEditing] = useState(false);
-    const [userData, setUserData] = useState({
-        username: 'João Silva',
-        email: 'joao.silva@email.com',
-        horário: 'manhã',
-        cidade: 'lisboa',
-    });
+    const { user } = useContext(AuthContext); // Pegando os dados do usuário do contexto
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setUserData({ ...userData, [name]: value });
-    };
-
-    const toggleEdit = () => {
-        setIsEditing(!isEditing);
-    };
-
-    const saveChanges = () => {
-        setIsEditing(false);
-        console.log('Dados salvos:', userData);
-    };
+    // Verificando se o user foi carregado
+    if (!user) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div className="perfil-container">
-            <h2>Perfil do Usuário</h2>
-            <div className="perfil-image">
-                <img
-                    src="https://via.placeholder.com/150"
-                    alt="Foto de Perfil"
-                    className="perfil-img"
-                />
-            </div>
-            <div className="perfil-field">
-                <label htmlFor="username">Nome:</label>
-                {isEditing ? (
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={userData.username}
-                        onChange={handleInputChange}
-                        className="input-field"
-                    />
-                ) : (
-                    <p id="username" className="field-value">{userData.username}</p>
-                )}
-            </div>
+        <div className="container">
+            <div className="row gutters">
+                <div className="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+                    <div className="card h-100">
+                        <div className="card-body">
+                            <div className="account-settings">
+                                <div className="user-profile">
+                                    <div className="user-avatar">
+                                        <img
+                                            src={user.avatar || "https://bootdey.com/img/Content/avatar/avatar7.png"} // Usar a imagem do usuário
+                                            alt="User Avatar"
+                                        />
+                                    </div>
+                                    <h5 className="user-name">{user.nome}</h5>
+                                    <h6 className="user-email">{user.email}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <div className="perfil-field">
-                <label htmlFor="email">E-mail:</label>
-                {isEditing ? (
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={userData.email}
-                        onChange={handleInputChange}
-                        className="input-field"
-                    />
-                ) : (
-                    <p id="email" className="field-value">{userData.email}</p>
-                )}
-            </div>
+                <div className="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+                    <div className="card h-100">
+                        <div className="card-body">
+                            <div className="row gutters">
+                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <h6 className="mb-2 text-primary">Detalhes Pessoais</h6>
+                                </div>
 
-            <div className="perfil-field">
-                <label htmlFor="telefone">Telefone:</label>
-                {isEditing ? (
-                    <input
-                        type="text"
-                        id="telefone"
-                        name="telefone"
-                        value={userData.telefone}
-                        onChange={handleInputChange}
-                        className="input-field"
-                    />
-                ) : (
-                    <p id="telefone" className="field-value">{userData.telefone}</p>
-                )}
-            </div>
+                                {/* Nome */}
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div className="form-group">
+                                        <label htmlFor="nome">Nome</label>
+                                        <input type="text" className="form-control" value={user.nome} disabled />
+                                    </div>
+                                </div>
 
-            <div className="perfil-field">
-                <label htmlFor="dataNascimento">Data de Nascimento:</label>
-                {isEditing ? (
-                    <input
-                        type="date"
-                        id="dataNascimento"
-                        name="dataNascimento"
-                        value={userData.dataNascimento || ''}
-                        onChange={handleInputChange}
-                        className="input-field"
-                    />
-                ) : (
-                    <p id="dataNascimento" className="field-value">
-                        {userData.dataNascimento || 'Não especificado'}
-                    </p>
-                )}
-            </div>
+                                {/* Email */}
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div className="form-group">
+                                        <label htmlFor="email">Email</label>
+                                        <input type="email" className="form-control" value={user.email} disabled />
+                                    </div>
+                                </div>
 
-            <div className="perfil-field">
-                <label htmlFor="tipoVoluntario">Tipo de Voluntário:</label>
-                {isEditing ? (
-                    <select
-                        id="tipoVoluntario"
-                        name="tipoVoluntario"
-                        value={userData.tipoVoluntario || ''}
-                        onChange={handleInputChange}
-                        className="input-field"
-                    >
-                        <option value="educação">Educação</option>
-                        <option value="saúde">Saúde</option>
-                        <option value="meioAmbiente">Meio Ambiente</option>
-                        <option value="outros">Outros</option>
-                    </select>
-                ) : (
-                    <p id="tipoVoluntario" className="field-value">
-                        {userData.tipoVoluntario || 'Não especificado'}
-                    </p>
-                )}
-            </div>
+                                {/* Telefone */}
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div className="form-group">
+                                        <label htmlFor="telefone">Telefone</label>
+                                        <input type="text" className="form-control" value={user.telefone || 'Não disponível'} disabled />
+                                    </div>
+                                </div>
 
-            <div className="perfil-field">
-                <label htmlFor="horário">Horário</label>
-                {isEditing ? (
-                    <select
-                        id="horário"
-                        name="horário"
-                        value={userData.horário}
-                        onChange={handleInputChange}
-                        className="input-field"
-                    >
-                        <option value="manhã">Manhã</option>
-                        <option value="tarde">Tarde</option>
-                        <option value="noite">Noite</option>
-                    </select>
-                ) : (
-                    <p id="horário" className="field-value">{userData.horário}</p>
-                )}
-            </div>
+                                {/* Data de Nascimento */}
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div className="form-group">
+                                        <label htmlFor="data_nascimento">Data de Nascimento</label>
+                                        <input type="text" className="form-control" value={user.data_nascimento || 'Não disponível'} disabled />
+                                    </div>
+                                </div>
 
-            <div className="perfil-field">
-                <label htmlFor="cidade">Cidade:</label>
-                {isEditing ? (
-                    <select
-                        id="cidade"
-                        name="cidade"
-                        value={userData.cidade}
-                        onChange={handleInputChange}
-                        className="input-field"
-                    >
-                        <option value="lisboa">Lisboa</option>
-                        <option value="alentejo">Alentejo</option>
-                        <option value="algarve">Algarve</option>
-                    </select>
-                ) : (
-                    <p id="cidade" className="field-value">{userData.cidade}</p>
-                )}
-            </div>
+                                {/* Categoria */}
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div className="form-group">
+                                        <label htmlFor="categoria">Categoria</label>
+                                        <input type="text" className="form-control" value={user.categoria || 'Não disponível'} disabled />
+                                    </div>
+                                </div>
 
-            <button
-                onClick={isEditing ? saveChanges : toggleEdit}
-                className={`action-button ${isEditing ? 'save' : 'edit'}`}
-            >
-                {isEditing ? 'Salvar Alterações' : 'Editar Perfil'}
-            </button>
+                                {/* Disponibilidade */}
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div className="form-group">
+                                        <label htmlFor="disponibilidade">Disponibilidade</label>
+                                        <input type="text" className="form-control" value={user.disponibilidade || 'Não disponível'} disabled />
+                                    </div>
+                                </div>
+
+                                {/* Competências */}
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div className="form-group">
+                                        <label htmlFor="competencias">Competências</label>
+                                        <input type="text" className="form-control" value={user.competencias || 'Não disponível'} disabled />
+                                    </div>
+                                </div>
+
+                                {/* Localidade */}
+                                <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                                    <div className="form-group">
+                                        <label htmlFor="localidade">Localidade</label>
+                                        <input type="text" className="form-control" value={user.localidade || 'Não disponível'} disabled />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row gutters">
+                                <div className="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <div className="text-right" style={{ marginTop: '20px' }}>
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            style={{ backgroundColor: 'hsl(0, 90%, 50%)', color: 'white' }}
+                                            onClick={() => window.history.back()} // Botão para voltar
+                                        >
+                                            Voltar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
