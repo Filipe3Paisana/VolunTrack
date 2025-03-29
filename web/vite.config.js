@@ -5,5 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
+    esbuild: {
+      target: 'esnext',
+      platform: 'linux',
+    }  
   }
+  
 })
