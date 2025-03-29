@@ -64,7 +64,7 @@ function App() {
                 localStorage.setItem('token', data.token); // Salva o token JWT
                 console.log(localStorage.getItem('token'));
                 setUser(data.user); // Define o usuário autenticado no contexto
-                navigate('/profile'); // Redireciona para o perfil
+                navigate('/login'); // Redireciona para o perfil
             } else {
                 alert(`Erro: ${data.message}`);
             }
@@ -172,8 +172,18 @@ function App() {
                             </div>
 
                             <MDBBtn type='submit' className='w-100 mb-4' size='md' style={{ backgroundColor: 'hsl(0, 90%, 50%)', color: 'white' }}>Sign up</MDBBtn>
+                            
                             </form>
+                            <MDBBtn 
+                                onClick={() => navigate('/login')} 
+                                className='w-100 mb-4' 
+                                size='md' 
+                                style={{ backgroundColor: 'hsl(0, 90%, 50%)', color: 'white' }}
+                            >
+                                Login
+                            </MDBBtn>
                         </MDBCardBody>
+                       
                     </MDBCard>
 
                 </MDBCol>
