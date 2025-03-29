@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 import './signup.css';
 import {
     MDBBtn,
@@ -14,6 +17,8 @@ import {
 
 function App() {
     const [categoria, setCategoria] = useState('');
+    const navigate = useNavigate();
+    const { setUser } = useContext(AuthContext);
     const [formData, setFormData] = useState({
         nome: '',
         email: '',
@@ -41,18 +46,25 @@ function App() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        formData.categoria = categoria;
+        
+        const dataToSend = {
+            ...formData,
+        };
 
         try {
             const response = await fetch('http://localhost:8080/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(dataToSend),
             });
-
+    
             const data = await response.json();
+    
             if (response.ok) {
-                alert('Usuário cadastrado com sucesso!');
+                localStorage.setItem('token', data.token); // Salva o token JWT
+                console.log(localStorage.getItem('token'));
+                setUser(data.user); // Define o usuário autenticado no contexto
+                navigate('/profile'); // Redireciona para o perfil
             } else {
                 alert(`Erro: ${data.message}`);
             }
