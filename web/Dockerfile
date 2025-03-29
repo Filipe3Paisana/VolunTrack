@@ -14,6 +14,6 @@ RUN npm install --legacy-peer-deps
 COPY . .
 
 # Compilar a aplicação React
-CMD npm start
+CMD ["npm", "run", "dev", "--", "--host", "--port", "3000"]
 
 EXPOSE 3000
