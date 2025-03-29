@@ -1,0 +1,80 @@
+/* Estilo base para o perfil */
+.perfil-container {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+  
+  .perfil-image img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .perfil-field {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .perfil-field label {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .field-value {
+    font-size: 16px;
+    margin-top: 5px;
+  }
+  
+  .action-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  .action-button.save {
+    background-color: #4CAF50;
+  }
+  
+  .action-button.edit {
+    background-color: #008CBA;
+  }
+  
+  @media (max-width: 768px) {
+    .perfil-container {
+      padding: 15px;
+      width: 90%;
+    }
+  
+    .input-field {
+      font-size: 14px;
+    }
+  
+    .action-button {
+      width: 100%;
+      padding: 12px 0;
+    }
+  }
+  
