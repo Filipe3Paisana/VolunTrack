@@ -55,6 +55,17 @@ function App() {
                             <MDBInput wrapperClass='mb-4' label='Phone number' id='form6' type='tel' />
                             <MDBInput wrapperClass='mb-4' label='Date of birth' id='form5' type='date' />
 
+                            {/* Disponibilidade durante o dia Dropdown */}
+                            <div className='mb-4'>
+                                <select className='form-select' id='disponibilidade'>
+                                    <option value='' disabled selected>Disponibilidade</option>
+                                    <option value='Manhã'>Manhã</option>
+                                    <option value='Tarde'>Tarde</option>
+                                    <option value='Noite'>Noite</option>
+                                </select>
+                            </div>
+
+
                             {/* Categoria Dropdown */}
                             <div className='mb-4'>
                                 <select 
